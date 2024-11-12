@@ -71,7 +71,7 @@ let case_info2s {ci_ind; _} =
   inductive2s ci_ind (* TODO: More info? *)
 
 let constr_to_glob_constr t env sigma =
-  Detyping.detype Detyping.Later Id.Set.empty env sigma t
+  Detyping.detype Detyping.Later env sigma t
 
 (* Note: De Bruijn calculations may be different from Coq's calculations *)
 let rec debruijn_to_id n ls = if (n - 1) > 0 then debruijn_to_id (n - 1) (List.tl ls) else if ls == [] then (print_endline (string_of_int n); Names.Name.mk_name (Names.Id.of_string "kAK")) else List.hd ls
@@ -116,6 +116,7 @@ let constr2s t =
     | Proj (proj, _, trm) -> Node [s2s "Proj"; constant2s (Projection.constant proj); aux ls trm] (* TODO: Improve *)
     | Int n -> Node [s2s "Int"; s2s (Uint63.to_string n)]
     | Float n -> Node [s2s "Float"; s2s (Float64.to_string n)]
+    | String s -> Node [s2s "String"; s2s (Pstring.to_string s)]
     | Array (u, cs, c, ty) ->
       Node [s2s "Array"; aux ls c; Node (Array.to_list (Array.map (aux ls) cs)); aux ls ty; Node (instance2s u)]
   and prec_declaration2s ls (ns, typs, trms) =

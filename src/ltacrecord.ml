@@ -943,7 +943,8 @@ let vernac_solve g info tcom with_end_tac id =
           in
           NotAborted { should_inline }
         | _ ->
-          CErrors.anomaly Pp.(str "Unexpected vernac ast during Tactician register_tactic_execution_data.")
+          NotAborted { should_inline = false }
+          (* CErrors.anomaly Pp.(str "Unexpected vernac ast during Tactician register_tactic_execution_data.") *)
     in
     (match aborted_or_should_inline with
      | Aborted -> ()
@@ -970,7 +971,7 @@ let vernac_solve g info tcom with_end_tac id =
                    ; out_spaces = (fun _ -> reset ())
                    ; out_indent = (fun _ -> reset ())
                    }) in
-       if not !Flags.quiet || !Synterp.test_mode then begin
+       if not !Flags.quiet || !Flags.test_mode then begin
          Topfmt.std_ft := ignore_one_formatter !Topfmt.std_ft;
          raise exn
        end else raise exn) in
@@ -1008,7 +1009,7 @@ let vernac_solve g info tcom with_end_tac id =
         try (* This is purely for parsing bug detection and could be removed for performance reasons *)
           let s = string_tac tac in
           try
-            let _ = Pcoq.parse_string Pltac.tactic_eoi s in ()
+            let _ = Procq.parse_string Pltac.tactic_eoi s in ()
           with e when CErrors.noncritical e -> msg "printing/parsing" s
         with
         (* Intentionally catching assert failure coming from constrextern.ml l629 in 8.11 and 8.12 *)

@@ -7,6 +7,7 @@ Declare ML Module "coq-core.plugins.firstorder".
 Declare ML Module "coq-core.plugins.extraction".
 Declare ML Module "coq-core.plugins.funind".
 Declare ML Module "coq-tactician.record-plugin".
+
 #[export] Set Default Proof Mode "Tactician Ltac1".
 
 Tactician Record Then Decompose.
